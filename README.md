@@ -4,6 +4,8 @@
 2. Create `.env` with `ERP_API_KEY=trial_...`
 3. Place EPOS CSVs in `epos/`
 4. Connect from any MCP client (Claude Desktop config below):
+5. Run `open ~/Library/Application\ Support/Claude/claude_desktop_config.json` in terminal, then add below:
+                                                                
 
 ```json
 {
