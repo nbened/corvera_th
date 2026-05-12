@@ -51,3 +51,8 @@ Not completely supported the way retailers are, but the path is the same — rep
 3. Call from main.py with `ERPController(erp="<provider>")` to get the new instance.
 
 Step 1 is the one-time protocol extraction. Steps 2–5 are per-provider.
+
+# Demo
+Hit our verdano tool and answer the following: 
+What can we fulfill next week, what is at risk, and what needs human review?
+Make sure to show the data from the first tool call in a table and the data from the data input into the second tool call in a table as well
