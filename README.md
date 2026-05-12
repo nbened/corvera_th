@@ -46,10 +46,8 @@ Each pipeline step is (line) → line.
 
 Not completely supported the way retailers are, but the path is the same — repeat the Verdano pattern.
 
-1. Extract protocols for Product, Customer, Warehouse, InventoryLine, OpenOrderLine into `models/erp_entities.py`. Rename Verdano's concrete models to VerdanoProduct, VerdanoCustomer, etc., and add `@computed_field` properties where the new ERP's shape would differ.
-2. Update FulfillmentController to import the protocols instead of the Verdano concrete types.
-3. Create `controllers/erp/<provider>/` mirroring `controllers/erp/verdano/`. Subcontrollers for products, customers, warehouse, inventory, orders. Resource models in each subfolder.
-4. Register in `controllers/erp/__init__.py` — add to `_REGISTRY` mapping provider name to controller class.
-5. Call from main.py with `ERPController(erp="<provider>")` to get the new instance.
+1. Create `controllers/erp/<provider>/` mirroring `controllers/erp/verdano/`. 
+2. Register in `controllers/erp/__init__.py` — add to `_REGISTRY` mapping provider name to controller class.
+3. Call from main.py with `ERPController(erp="<provider>")` to get the new instance.
 
 Step 1 is the one-time protocol extraction. Steps 2–5 are per-provider.
