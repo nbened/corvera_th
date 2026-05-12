@@ -1,0 +1,9 @@
+id,type,name,parent_id,warehouse_id
+CUST-TESCO-UK,sold_to,Tesco UK,,
+BILL-TESCO-HQ,bill_to,Tesco Head Office,CUST-TESCO-UK,
+SHIP-TESCO-DAV,ship_to,Tesco Daventry Chilled DC,CUST-TESCO-UK,WH-CHILLED-NORTH
+SHIP-TESCO-RDG,ship_to,Tesco Reading Ambient DC,CUST-TESCO-UK,WH-AMBIENT-SOUTH
+CUST-SAINS-UK,sold_to,Sainsbury's UK,,
+BILL-SAINS-HQ,bill_to,Sainsbury's Head Office,CUST-SAINS-UK,
+SHIP-SAINS-CHILLED,ship_to,Sainsbury's All Depots - Chilled,CUST-SAINS-UK,WH-CHILLED-NORTH
+SHIP-SAINS-AMBIENT,ship_to,Sainsbury's All Depots - Ambient,CUST-SAINS-UK,WH-AMBIENT-SOUTH

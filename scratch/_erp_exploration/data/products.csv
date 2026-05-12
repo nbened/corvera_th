@@ -1,0 +1,13 @@
+sku,name,category,temperature_band,case_pack,status,current_gtins,legacy_gtins,aliases
+VG-DAAL-400,Lentil Dal 400g,ready_meal,chilled,6,active,5060000010012,,VD Lentil Dal 400g; Lentil Dahl 400g
+VG-CHCK-400,Chickpea Curry 400g,ready_meal,chilled,6,active,5060000010029,,
+VG-THAI-400,Thai Green Curry 400g,ready_meal,chilled,6,active,5060000010036,,Thai Green Meal 400g
+VG-CHIL-400,Smoky Bean Chilli 400g,ready_meal,chilled,6,active,5060000010043,,Bean Chilli 400g
+VG-TOMS-500,Tomato Basil Soup 500g,soup,ambient,8,active,5060000010050,,Tomato Soup 500g; Tom Basil Soup 0.5kg
+VG-MUSH-500,Mushroom Soup 500g,soup,ambient,8,active,5060000010067,,
+VG-CARR-500,Carrot Ginger Soup 500g,soup,ambient,8,active,5060000010074,,Carrot & Ginger 500g; Carrot Ginger Soup 0.5kg
+VG-PROT-350,Protein Bowl 350g,bowl,chilled,6,active,5060000010081,,
+VG-FALA-350,Falafel Bowl 350g,bowl,chilled,6,active,5060000010098,,
+VG-FALA-500,Falafel Bowl 500g,bowl,chilled,4,active,5060000010104,,Falafel Bowl Large
+VG-GRSM-250,Green Smoothie 250ml,drink,chilled,12,active,5060000010111,,Green Smoothie
+VG-BRSM-250,Berry Smoothie 250ml,drink,chilled,12,active,5060000010128,5060000099999,Berry Smoothie

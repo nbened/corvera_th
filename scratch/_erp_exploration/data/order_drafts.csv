@@ -1,0 +1,2 @@
+draft_id,external_reference,sold_to_customer_id,bill_to_customer_id,ship_to_location_id,required_date,status,notes,sku,quantity_cases
+DRAFT-001,TEST-REF-001,CUST-TESCO-UK,BILL-TESCO-HQ,TESCO-DAV,2026-05-20,draft,Automated test draft — safe to delete,VG-FALA-500,5

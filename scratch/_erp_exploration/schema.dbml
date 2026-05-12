@@ -1,0 +1,141 @@
+// Use DBML to define your database structure
+// Docs: https://dbml.dbdiagram.io/docs
+
+Table warehouses {
+  id varchar [primary key]
+  name varchar
+  temperature_band varchar [note: 'chilled or ambient']
+}
+
+Table customers {
+  id varchar [primary key]
+  type varchar [note: 'sold_to | bill_to | ship_to']
+  name varchar
+  parent_id varchar [note: 'references the sold_to parent; null for top-level sold_to records']
+  warehouse_id varchar [note: 'only populated for ship_to locations']
+}
+
+Table products {
+  sku varchar [primary key]
+  name varchar
+  category varchar [note: 'ready_meal | soup | bowl | drink']
+  temperature_band varchar [note: 'chilled or ambient']
+  case_pack integer
+  status varchar [note: 'active | discontinued']
+  current_gtins varchar
+  legacy_gtins varchar
+  aliases varchar [note: 'semicolon-separated alternate names']
+}
+
+Table inventory {
+  sku varchar
+  warehouse_id varchar
+  available_cases integer
+  allocated_cases integer
+  as_of timestamp
+
+  indexes {
+    (sku, warehouse_id) [pk]
+  }
+}
+
+Table open_orders {
+  order_id varchar [primary key]
+  sold_to_customer_id varchar
+  bill_to_customer_id varchar
+  ship_to_location_id varchar
+  required_date date
+  notes text
+  sku varchar
+  quantity_cases integer
+}
+
+Table order_drafts {
+  draft_id varchar [primary key]
+  external_reference varchar
+  sold_to_customer_id varchar
+  bill_to_customer_id varchar
+  ship_to_location_id varchar
+  required_date date
+  status varchar [note: 'draft | confirmed | cancelled']
+  notes text
+  sku varchar
+  quantity_cases integer
+}
+
+// Refs
+Ref: customers.parent_id > customers.id
+Ref: customers.warehouse_id > warehouses.id
+
+Ref: inventory.sku > products.sku
+Ref: inventory.warehouse_id > warehouses.id
+
+Ref: open_orders.sold_to_customer_id > customers.id
+Ref: open_orders.bill_to_customer_id > customers.id
+Ref: open_orders.ship_to_location_id > customers.id
+Ref: open_orders.sku > products.sku
+
+Ref: order_drafts.sold_to_customer_id > customers.id
+Ref: order_drafts.bill_to_customer_id > customers.id
+Ref: order_drafts.ship_to_location_id > customers.id
+Ref: order_drafts.sku > products.sku
+
+// Records
+
+Records warehouses(id, name, temperature_band) {
+  'WH-CHILLED-NORTH', 'North Chilled', 'chilled'
+  'WH-AMBIENT-SOUTH', 'South Ambient', 'ambient'
+}
+
+Records customers(id, type, name, parent_id, warehouse_id) {
+  'CUST-TESCO-UK', 'sold_to', 'Tesco UK', null, null
+  'BILL-TESCO-HQ', 'bill_to', 'Tesco Head Office', 'CUST-TESCO-UK', null
+  'SHIP-TESCO-DAV', 'ship_to', 'Tesco Daventry Chilled DC', 'CUST-TESCO-UK', 'WH-CHILLED-NORTH'
+  'SHIP-TESCO-RDG', 'ship_to', 'Tesco Reading Ambient DC', 'CUST-TESCO-UK', 'WH-AMBIENT-SOUTH'
+  'CUST-SAINS-UK', 'sold_to', "Sainsbury's UK", null, null
+  'BILL-SAINS-HQ', 'bill_to', "Sainsbury's Head Office", 'CUST-SAINS-UK', null
+  'SHIP-SAINS-CHILLED', 'ship_to', "Sainsbury's All Depots - Chilled", 'CUST-SAINS-UK', 'WH-CHILLED-NORTH'
+  'SHIP-SAINS-AMBIENT', 'ship_to', "Sainsbury's All Depots - Ambient", 'CUST-SAINS-UK', 'WH-AMBIENT-SOUTH'
+}
+
+Records products(sku, name, category, temperature_band, case_pack, status, current_gtins, legacy_gtins, aliases) {
+  'VG-DAAL-400', 'Lentil Dal 400g', 'ready_meal', 'chilled', 6, 'active', '5060000010012', null, 'VD Lentil Dal 400g; Lentil Dahl 400g'
+  'VG-CHCK-400', 'Chickpea Curry 400g', 'ready_meal', 'chilled', 6, 'active', '5060000010029', null, null
+  'VG-THAI-400', 'Thai Green Curry 400g', 'ready_meal', 'chilled', 6, 'active', '5060000010036', null, 'Thai Green Meal 400g'
+  'VG-CHIL-400', 'Smoky Bean Chilli 400g', 'ready_meal', 'chilled', 6, 'active', '5060000010043', null, 'Bean Chilli 400g'
+  'VG-TOMS-500', 'Tomato Basil Soup 500g', 'soup', 'ambient', 8, 'active', '5060000010050', null, 'Tomato Soup 500g; Tom Basil Soup 0.5kg'
+  'VG-MUSH-500', 'Mushroom Soup 500g', 'soup', 'ambient', 8, 'active', '5060000010067', null, null
+  'VG-CARR-500', 'Carrot Ginger Soup 500g', 'soup', 'ambient', 8, 'active', '5060000010074', null, 'Carrot & Ginger 500g; Carrot Ginger Soup 0.5kg'
+  'VG-PROT-350', 'Protein Bowl 350g', 'bowl', 'chilled', 6, 'active', '5060000010081', null, null
+  'VG-FALA-350', 'Falafel Bowl 350g', 'bowl', 'chilled', 6, 'active', '5060000010098', null, null
+  'VG-FALA-500', 'Falafel Bowl 500g', 'bowl', 'chilled', 4, 'active', '5060000010104', null, 'Falafel Bowl Large'
+  'VG-GRSM-250', 'Green Smoothie 250ml', 'drink', 'chilled', 12, 'active', '5060000010111', null, 'Green Smoothie'
+  'VG-BRSM-250', 'Berry Smoothie 250ml', 'drink', 'chilled', 12, 'active', '5060000010128', '5060000099999', 'Berry Smoothie'
+}
+
+Records inventory(sku, warehouse_id, available_cases, allocated_cases, as_of) {
+  'VG-DAAL-400', 'WH-CHILLED-NORTH', 50, 8, '2026-05-03T09:00:00Z'
+  'VG-CHCK-400', 'WH-CHILLED-NORTH', 24, 5, '2026-05-03T09:00:00Z'
+  'VG-THAI-400', 'WH-CHILLED-NORTH', 18, 6, '2026-05-03T09:00:00Z'
+  'VG-CHIL-400', 'WH-CHILLED-NORTH', 40, 4, '2026-05-03T09:00:00Z'
+  'VG-TOMS-500', 'WH-AMBIENT-SOUTH', 55, 10, '2026-05-03T09:00:00Z'
+  'VG-MUSH-500', 'WH-AMBIENT-SOUTH', 24, 2, '2026-05-03T09:00:00Z'
+  'VG-CARR-500', 'WH-AMBIENT-SOUTH', 18, 0, '2026-05-03T09:00:00Z'
+  'VG-PROT-350', 'WH-CHILLED-NORTH', 34, 10, '2026-05-03T09:00:00Z'
+  'VG-FALA-350', 'WH-CHILLED-NORTH', 22, 0, '2026-05-03T09:00:00Z'
+  'VG-FALA-500', 'WH-CHILLED-NORTH', 20, 8, '2026-05-03T09:00:00Z'
+  'VG-GRSM-250', 'WH-CHILLED-NORTH', 16, 2, '2026-05-03T09:00:00Z'
+  'VG-BRSM-250', 'WH-CHILLED-NORTH', 26, 0, '2026-05-03T09:00:00Z'
+}
+
+Records open_orders(order_id, sold_to_customer_id, bill_to_customer_id, ship_to_location_id, required_date, notes, sku, quantity_cases) {
+  'SO-1001', 'CUST-TESCO-UK', 'BILL-TESCO-HQ', 'SHIP-TESCO-DAV', '2026-05-11', null, 'VG-DAAL-400', 12
+  'SO-1002', 'CUST-TESCO-UK', 'BILL-TESCO-HQ', 'SHIP-TESCO-DAV', '2026-05-15', null, 'VG-FALA-500', 10
+  'SO-1003', 'CUST-SAINS-UK', 'BILL-SAINS-HQ', 'SHIP-SAINS-CHILLED', '2026-05-12', null, 'VG-GRSM-250', 6
+  'SO-1004', 'CUST-TESCO-UK', 'BILL-TESCO-HQ', 'SHIP-TESCO-DAV', '2026-05-12', null, 'VG-THAI-400', 8
+  'SO-1005', 'CUST-SAINS-UK', 'BILL-SAINS-HQ', 'SHIP-SAINS-AMBIENT', '2026-05-13', null, 'VG-TOMS-500', 8
+}
+
+Records order_drafts(draft_id, external_reference, sold_to_customer_id, bill_to_customer_id, ship_to_location_id, required_date, status, notes, sku, quantity_cases) {
+  'DRAFT-001', 'TEST-REF-001', 'CUST-TESCO-UK', 'BILL-TESCO-HQ', 'TESCO-DAV', '2026-05-20', 'draft', 'Automated test draft — safe to delete', 'VG-FALA-500', 5
+}
