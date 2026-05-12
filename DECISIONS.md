@@ -37,12 +37,14 @@
 - So the unit of work became FulfillmentLine. One forecast row in, one annotated line out. Adding a retailer is a new adapter (forecast model + actual model with @computed_field), not a new entity.
 
 
-# From 2 to 200
+# From 2 to 200 (modularity)
 
 - Add the schema of whatever you're working with. New retailer = one folder (forecast model, actual model, controller subclass) + one registry entry. Zero edits to FulfillmentController or anywhere else.
 - FulfillmentLine.retailer is str, not Literal. Open-set. Unknown retailers handled gracefully at lookup time.
 - More deterministic checks? Add a method on the controller, slot it into evaluate_row, optionally add a field on the line.
 - More data to sift through? Add filters to the request shape. retailer today, week / sku / exceptions_only next.
+- Our upstream defense of our O(n*(x+y+z)) is filtering - the process up front takes a second, but won't explode
+- Each fulfillment test is extensible, testable, and hot-swappable
 
 
 # Tradeoffs
